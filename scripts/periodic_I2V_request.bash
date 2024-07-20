@@ -16,7 +16,7 @@ send_request() {
     -F "motion_bucket_id=50" \
     -F "fps=25" \
     -F "noise_aug_strength=0.05" \
-    -F "image=@test_files/cool-cat-hat.png" &
+    -F "image=@example_files/cool-cat-hat.png" &
 }
 
 while true; do

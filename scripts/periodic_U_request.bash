@@ -11,7 +11,7 @@ send_request() {
     curl -X POST ${api_url}/upscale \
     -H "Authorization: Bearer f55433f3-c493-4af7-b273-fbbe0cfd63e7" \
     -F model_id="stabilityai/stable-diffusion-x4-upscaler" \
-    -F image=@test_files/ai_subnet_test_files/cool-cat-low-res.png \
+    -F image=@example_files/cool-cat-low-res.png \
     -F prompt="put the cat in the original image on the beach" &
 }
 

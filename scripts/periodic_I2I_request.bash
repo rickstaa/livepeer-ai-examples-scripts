@@ -11,7 +11,7 @@ send_request() {
     curl -X POST ${api_url}/image-to-image \
     -H "Authorization: Bearer f55433f3-c493-4af7-b273-fbbe0cfd63e7" \
     -F model_id="timbrooks/instruct-pix2pix" \
-    -F image=@test_files/cool-cat.png \
+    -F image=@example_files/cool-cat.png \
     -F prompt="put the cat in the original image on the beach" &
 }
 
