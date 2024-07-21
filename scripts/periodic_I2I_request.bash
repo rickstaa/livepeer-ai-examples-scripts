@@ -1,5 +1,6 @@
 #!/bin/bash
 api_url="${AI_GATEWAY_URL:-https://dream-gateway.livepeer.cloud}"
+bearer_token="${AI_BEARER_TOKEN:-}"
 
 # Get script arguments or use default values.
 batch_sleep_duration=${1:-1800}             # Pause for 30 minutes by default
@@ -9,7 +10,7 @@ batch_size=${3:-3}                          # Send 3 requests per batch by defau
 # Request T2I job.
 send_request() {
     curl -X POST ${api_url}/image-to-image \
-    -H "Authorization: Bearer f55433f3-c493-4af7-b273-fbbe0cfd63e7" \
+    -H "Authorization: Bearer ${bearer_token}" \
     -F model_id="timbrooks/instruct-pix2pix" \
     -F image=@example_files/cool-cat.png \
     -F prompt="put the cat in the original image on the beach" &

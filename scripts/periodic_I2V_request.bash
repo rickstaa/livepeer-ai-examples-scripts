@@ -1,5 +1,6 @@
 #!/bin/bash
 api_url="${AI_GATEWAY_URL:-https://dream-gateway.livepeer.cloud}"
+bearer_token="${AI_BEARER_TOKEN:-}"
 
 # Get script arguments or use default values.
 batch_sleep_duration=${1:-1800}             # Pause for 30 minutes by default
@@ -9,7 +10,7 @@ batch_size=${3:-3}                          # Send 3 requests per batch by defau
 # Request I2V job.
 send_request() {
     curl -X POST ${api_url}/image-to-video \
-    -H "Authorization: Bearer f55433f3-c493-4af7-b273-fbbe0cfd63e7" \
+    -H "Authorization: Bearer ${bearer_token}" \
     -F "model_id=stabilityai/stable-video-diffusion-img2vid-xt-1-1" \
     -F "width=1024" \
     -F "height=1024" \
