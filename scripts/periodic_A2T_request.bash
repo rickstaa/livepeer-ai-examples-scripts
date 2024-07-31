@@ -9,6 +9,7 @@ batch_size=${3:-3}                          # Send 3 requests per batch by defau
 
 # Request T2I job.
 send_request() {
+    echo -n "$(date '+%Y-%m-%d %H:%M:%S') - "
     curl -X POST ${api_url}/audio-to-text \
     -H "Authorization: Bearer ${bearer_token}" \
     -F model_id=openai/whisper-large-v3 \

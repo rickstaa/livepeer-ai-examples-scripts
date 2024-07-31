@@ -9,6 +9,7 @@ batch_size=${3:-3}                          # Send 3 requests per batch by defau
 
 # Request I2V job.
 send_request() {
+    echo -n "$(date '+%Y-%m-%d %H:%M:%S') - "
     curl -X POST ${api_url}/image-to-video \
     -H "Authorization: Bearer ${bearer_token}" \
     -F "model_id=stabilityai/stable-video-diffusion-img2vid-xt-1-1" \

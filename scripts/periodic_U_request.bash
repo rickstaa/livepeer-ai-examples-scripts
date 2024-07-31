@@ -9,6 +9,7 @@ batch_size=${2:-2}                          # Send 2 requests per batch by defau
 
 # Request T2I job.
 send_request() {
+    echo -n "$(date '+%Y-%m-%d %H:%M:%S') - "
     curl -X POST ${api_url}/upscale \
     -H "Authorization: Bearer ${bearer_token}" \
     -F model_id="stabilityai/stable-diffusion-x4-upscaler" \
