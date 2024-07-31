@@ -5,12 +5,17 @@ bearer_token="${AI_BEARER_TOKEN:-}"
 # Get script arguments or use default values.
 batch_sleep_duration=${1:-1800}             # Pause for 30 minutes by default
 request_max_random_sleep_duration=${2:-60}  # Sleep for a random time between 0 and 60 seconds by default
-batch_size=${3:-3}                          # Send 3 requests per batch by default
+batch_size=${3:-2}                          # Send 2 requests per batch by default
+print_interval=${4:-$batch_size}            # Stats print interval
+
+# Initialize counters.
+success_count=0
+failure_count=0
+total_tries=0
 
 # Request T2I job.
 send_request() {
-    echo -n "$(date '+%Y-%m-%d %H:%M:%S') - "
-    curl -X POST ${api_url}/text-to-image \
+    response=$(curl -s -w "\n%{http_code}" -X POST ${api_url}/text-to-image \
     -H "Authorization: Bearer ${bearer_token}" \
     -d '{
     "model_id": "SG161222/RealVisXL_V4.0_Lightning",
@@ -21,7 +26,24 @@ send_request() {
     "height": 1024,
     "num_inference_steps": 6,
     "num_images_per_prompt": 3
-    }'
+    }')
+
+    # Extract the HTTP status code and print response body.
+    http_code=$(echo "$response" | tail -n1)
+    response_body=$(echo "$response" | sed '$d')
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - $response_body"
+
+    # Check response and print stats.
+    if [ "$http_code" -eq 200 ]; then
+        success_count=$((success_count + 1))
+    else
+        failure_count=$((failure_count + 1))
+    fi
+    total_tries=$((total_tries + 1))
+    if [ $((total_tries % print_interval)) -eq 0 ]; then
+        success_rate=$(echo "scale=2; $success_count / $total_tries * 100" | bc)
+        echo "$(date '+%Y-%m-%d %H:%M:%S') - Total tries: $total_tries, Failures: $failure_count, Success rate: $success_rate%"
+    fi
 }
 
 while true; do

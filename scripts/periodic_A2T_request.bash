@@ -6,14 +6,36 @@ bearer_token="${AI_BEARER_TOKEN:-}"
 batch_sleep_duration=${1:-1800}             # Pause for 30 minutes by default
 request_max_random_sleep_duration=${2:-60}  # Sleep for a random time between 0 and 60 seconds by default
 batch_size=${3:-3}                          # Send 3 requests per batch by default
+print_interval=${4:-$batch_size}            # Stats print interval
 
-# Request T2I job.
+# Initialize counters.
+success_count=0
+failure_count=0
+total_tries=0
+
+# Request A2T job.
 send_request() {
-    echo -n "$(date '+%Y-%m-%d %H:%M:%S') - "
-    curl -X POST ${api_url}/audio-to-text \
+    response=$(curl -s -w "\n%{http_code}" -X POST ${api_url}/audio-to-text \
     -H "Authorization: Bearer ${bearer_token}" \
     -F model_id=openai/whisper-large-v3 \
-    -F audio=@example_files/test_audio.flac
+    -F audio=@example_files/test_audio.flac)
+
+    # Extract the HTTP status code and print response body.
+    http_code=$(echo "$response" | tail -n1)
+    response_body=$(echo "$response" | sed '$d')
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - $response_body"
+
+    # Check response and print stats.
+    if [ "$http_code" -eq 200 ]; then
+        success_count=$((success_count + 1))
+    else
+        failure_count=$((failure_count + 1))
+    fi
+    total_tries=$((total_tries + 1))
+    if [ $((total_tries % print_interval)) -eq 0 ]; then
+        success_rate=$(echo "scale=2; $success_count / $total_tries * 100" | bc)
+        echo "$(date '+%Y-%m-%d %H:%M:%S') - Total tries: $total_tries, Failures: $failure_count, Success rate: $success_rate%"
+    fi
 }
 
 while true; do
