@@ -1,11 +1,13 @@
 #!/bin/bash
 api_url="${AI_GATEWAY_URL:-https://dream-gateway.livepeer.cloud}"
 bearer_token="${AI_BEARER_TOKEN:-}"
+model_id="${AI_MODEL_ID:-timbrooks/instruct-pix2pix}"
+batch_size="${AI_BATCH_SIZE:-3}"
 
 # Get script arguments or use default values.
-batch_sleep_duration=${1:-1800}             # Pause for 30 minutes by default
-request_max_random_sleep_duration=${2:-60}  # Sleep for a random time between 0 and 60 seconds by default
-batch_size=${3:-3}                          # Send 3 requests per batch by default
+batch_sleep_duration=${1:-225}              # Pause for N minutes
+request_max_random_sleep_duration=${2:-60}  # Sleep for a random time between 0 and N seconds
+batch_size=${3:-$batch_size}                # Send N requests per batch 
 print_interval=${4:-$batch_size}            # Stats print interval
 
 # Initialize counters.
@@ -16,10 +18,12 @@ total_tries=0
 # Request I2I job.
 send_request() {
     response=$(curl -s -w "\n%{http_code}" -X POST ${api_url}/image-to-image \
-    -H "Authorization: Bearer ${bearer_token}" \
-    -F model_id="timbrooks/instruct-pix2pix" \
-    -F image=@example_files/cool-cat.png \
-    -F prompt="put the cat in the original image on the beach")
+        -H "Authorization: Bearer ${bearer_token}" \
+        -F model_id="${model_id}" \
+        -F image=@example_files/cool-cat.png \
+        -F prompt="put the cat in the original image on the beach" \
+        -F num_inference_steps=1
+    )
 
     # Extract the HTTP status code and print response body.
     http_code=$(echo "$response" | tail -n1)

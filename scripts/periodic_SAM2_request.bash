@@ -1,8 +1,8 @@
 #!/bin/bash
 api_url="${AI_GATEWAY_URL:-https://dream-gateway.livepeer.cloud}"
 bearer_token="${AI_BEARER_TOKEN:-}"
-model_id="${AI_MODEL_ID:-SG161222/RealVisXL_V4.0_Lightning}"
-batch_size="${AI_BATCH_SIZE:-2}"
+model_id="${AI_MODEL_ID:-facebook/sam2-hiera-large}"
+batch_size="${AI_BATCH_SIZE:-3}"
 
 # Get script arguments or use default values.
 batch_sleep_duration=${1:-225}              # Pause for N minutes
@@ -15,22 +15,15 @@ success_count=0
 failure_count=0
 total_tries=0
 
-# Request T2I job.
+# Request A2T job.
 send_request() {
-    response=$(curl -s -w "\n%{http_code}" -X POST ${api_url}/text-to-image \
+    response=$(curl -s -w "\n%{http_code}" -X POST ${api_url}/segment-anything-2 \
         -H "Authorization: Bearer ${bearer_token}" \
-        -d '{
-            "model_id": "'${model_id}'",
-            "prompt": "a small white kitten on a blue hammock and a palm tree at an abstract ethereal semi - transparent sunny beach among rainbow light impressive skies",
-            "negative_prompt": "",
-            "guidance_scale": 7,
-            "width": 1024,
-            "height": 1024,
-            "num_inference_steps": 6,
-            "num_images_per_prompt": 3
-        }'
+        -F model_id="${model_id}" \
+        -F point_coords="[[120,100],[120,50]]" \
+        -F point_labels="[1,0]" \
+        -F image=@example_files/cool-cat.png
     )
-
 
     # Extract the HTTP status code and print response body.
     http_code=$(echo "$response" | tail -n1)
