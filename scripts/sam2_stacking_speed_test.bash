@@ -63,3 +63,4 @@ for ((i=2; i<=num_ports; i++)); do
 done
 
 echo "SAM2 stacking speed test complete."
+echo "NOTICE: Please keep the request time increase below 25% for optimal performance."
