@@ -21,4 +21,4 @@ docker run \
     -httpIngest \
     -maxTotalEV=100000000000000000000 \
     -maxPricePerUnit=150000000000000 \
-    -orchAddr="https://<ORCH_URI>>8936"
+    -orchAddr="https://<ORCH_URI>:8936"
