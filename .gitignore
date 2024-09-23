@@ -1,1 +1,5 @@
 .vscode
+
+# Personal files.
+run_ai_orch.bash
+run_ai_gateway.bash

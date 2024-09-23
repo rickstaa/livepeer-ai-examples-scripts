@@ -1,0 +1,23 @@
+docker run \
+    --name=livepeer_ai_orchestrator \
+    -v /home/<USER>/.lpData/:/root/.lpData/ \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    --network=host \
+    --gpus=all \
+    livepeer/go-livepeer:0.7.9-ai.1 \
+    -network=arbitrum-one-mainnet \
+    -ethUrl="<API_PROVIDER_URI>" \
+    -orchestrator \
+    -transcoder \
+    -serviceAddr="<ORCH_URI>:8936" \
+    -v=6 \
+    -nvidia=all \
+    -ticketEV=2999999999999 \
+    -ethKeystorePath="/root/.lpData/arbitrum-one-mainnet/keystore" \
+    -ethPassword="/root/.lpData/.eth_secret" \
+    -ethAcctAddr="<THE_ORCH_ADDR>" \
+    -ethOrchAddr="<MAIN_ORCH_ADDR>" \
+    -aiWorker \
+    -aiModels="/root/.lpData/ai_configs/aiModelsI2V.json" \
+    -aiModelsDir="/home/<USER>/.lpData/models" \
+    -monitor

@@ -5,7 +5,7 @@ model_id="${AI_MODEL_ID:-stabilityai/stable-video-diffusion-img2vid-xt-1-1}"
 batch_size="${AI_BATCH_SIZE:-3}"
 
 # Get script arguments or use default values.
-batch_sleep_duration=${1:-225}              # Pause for N minutes
+batch_sleep_duration=${1:-112.5}            # Pause for N minutes
 request_max_random_sleep_duration=${2:-60}  # Sleep for a random time between 0 and N seconds
 batch_size=${3:-$batch_size}                # Send N requests per batch 
 print_interval=${4:-$batch_size}            # Stats print interval

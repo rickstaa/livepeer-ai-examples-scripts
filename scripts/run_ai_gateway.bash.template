@@ -1,0 +1,24 @@
+docker run \
+    --name=livepeer_ai_gateway \
+    -v ~/.lpData/:/home/<USER>/.lpData/ \
+    -v ~/.lpData2/:/home/<USER>/.lpData2/ \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    --network=host \
+    livepeer/go-livepeer:ai-video \
+    -network=arbitrum-one-mainnet \
+    -ethUrl="<API_PROVIDER_URI>" \
+    -cliAddr="127.0.0.1:5935" \
+    -ethKeystorePath="/home/<USER>/.lpData/arbitrum-one-mainnet/keystore" \
+    -ethAcctAddr="<GATEWAY_WALLET>" \
+    -ethPassword="/home/<USER>/.lpData/.gateway_eth_secret" \
+    -gateway=true \
+    -serviceAddr="0.0.0.0:8935" \
+    -rtmpAddr="0.0.0.0:1935" \
+    -httpAddr="0.0.0.0:8935" \
+    -monitor=true \
+    -datadir="/home/<USER>/.lpData2" \
+    -v=6 \
+    -httpIngest \
+    -maxTotalEV=100000000000000000000 \
+    -maxPricePerUnit=150000000000000 \
+    -orchAddr="https://<ORCH_URI>>8936"
